@@ -143,7 +143,7 @@ public class RedisServer {
     }
 
     private JedisPool buildJedisPool(String host, int port, int connectionTimeout, int soTimeout,
-                                boolean ssl) {
+                               String password, boolean ssl) {
         final JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(maxConnections); //The maximum number of connections that are supported by the pool.
         poolConfig.setMaxIdle(maxConnections); // Is the actual maximum number of connections required by workloads
@@ -153,7 +153,7 @@ public class RedisServer {
         poolConfig.setTestWhileIdle(true);
         poolConfig.setNumTestsPerEvictionRun(3);
         poolConfig.setBlockWhenExhausted(true);
-        JedisPool jedisPool = new JedisPool(poolConfig, host, port, connectionTimeout, soTimeout, null,
+        JedisPool jedisPool = new JedisPool(poolConfig, host, port, connectionTimeout, soTimeout, password,
                 dbNumber, null, ssl);
         jedisPoolMap.put(uniquePoolId, jedisPool);
         return jedisPool;
@@ -210,6 +210,12 @@ public class RedisServer {
             }
         }
 
+        String passwordProp = (String) messageContext.getProperty(RedisConstants.PASSWORD);
+        String password=null;
+        if (passwordProp != null && !passwordProp.isEmpty()) {
+            password=passwordProp;
+        }
+
         if (!Objects.isNull(cacheKey) && !cacheKey.isEmpty()) {
             JedisShardInfo shardInfo = new JedisShardInfo(host, port, connectionTimeout, soTimeout, weight, useSsl);
             shardInfo.setPassword(cacheKey);
@@ -220,7 +226,7 @@ public class RedisServer {
             jedisLock.lock();
             try {
                 if (jedisPoolMap.get(uniquePoolId) == null) {
-                    buildJedisPool(host, port, connectionTimeout, soTimeout, useSsl);
+                    buildJedisPool(host, port, connectionTimeout, soTimeout,password, useSsl);
                 }
             } finally {
                 jedisLock.unlock();

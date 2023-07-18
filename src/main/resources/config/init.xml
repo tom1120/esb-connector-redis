@@ -29,6 +29,7 @@
     <!-- standalone mode specific parameters-->
     <parameter name="redisHost" description="the server host"/>
     <parameter name="redisPort" description="the port to server run"/>
+    <parameter name="redisPassword" description="the password to server run"/>
     <parameter name="weight" description="weight of the shard"/>
     <parameter name="redisConnectionURI" description="redis connection URI"/>
 
@@ -50,6 +51,12 @@
             <then/>
             <else>
                 <property name="redisPort" expression="$func:redisPort"/>
+            </else>
+        </filter>
+        <filter xpath="$func:redisPassword = '' or  not(string($func:redisPassword))">
+            <then/>
+            <else>
+                <property name="redisPassword" expression="$func:redisPassword"/>
             </else>
         </filter>
         <filter xpath="$func:redisConnectionPoolId = '' or  not(string($func:redisConnectionPoolId))">

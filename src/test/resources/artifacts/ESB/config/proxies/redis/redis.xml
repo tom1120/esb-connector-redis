@@ -27,6 +27,7 @@
         <inSequence>
             <property name="redisHost" expression="json-eval($.redisHost)"/>
             <property name="redisPort" expression="json-eval($.redisPort)"/>
+            <property name="redisPassword" expression="json-eval($.redisPassword)"/>
             <property name="redisTimeout" expression="json-eval($.redisTimeout)"/>
             <property name="redisKey" expression="json-eval($.redisKey)"/>
             <property name="redisValue" expression="json-eval($.redisValue)"/>
@@ -66,6 +67,7 @@
             <redis.init>
                 <redisHost>{$ctx:redisHost}</redisHost>
                 <redisPort>{$ctx:redisPort}</redisPort>
+                <redisPort>{$ctx:redisPassword}</redisPort>
                 <redisTimeout>{$ctx:redisTimeout}</redisTimeout>
                 <redisTimeout>{$ctx:cacheKey}</redisTimeout>
                 <redisTimeout>{$ctx:useSsl}</redisTimeout>
